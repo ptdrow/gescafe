@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from database import DB, STAGE, build_coll
+from database import DB, STAGE
 from models.product import Product
 
 router = APIRouter()
 
-COLL = build_coll("products", STAGE)
+COLL = "products"
 
 @router.post("/")
 async def create_product(product: Product):
