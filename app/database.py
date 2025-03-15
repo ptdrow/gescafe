@@ -10,4 +10,5 @@ COFFEE_SHOP = os.environ["COFFEE_SHOP"]
 
 client = MongoClient(MONGO_URI)
 DB = client[COFFEE_SHOP]
+USERS_COLLECTION = DB["users"]
 

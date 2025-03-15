@@ -1,7 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
+from fastapi.security import OAuth2PasswordRequestForm
+from datetime import timedelta
 import uvicorn
 from dotenv import load_dotenv
+from auth import create_access_token, get_password_hash, verify_password
+from database import USERS_COLLECTION
 load_dotenv()
 
 import os
@@ -29,6 +33,18 @@ async def root():
     return {"message": f"Bienvenido a la API de la cafetería: {COFFEE_SHOP}",
             "stage":STAGE,
             "version":VERSION}
+
+
+@app.post("/api/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = USERS_COLLECTION.find_one({"username": form_data.username})
+    if not user or not verify_password(form_data.password, user["hashed_password"]):
+        raise HTTPException(status_code=400, detail="Usuario o contraseña incorrectos")
+    
+    access_token = create_access_token(data={"sub": user["username"], "role": user["role"]}, expires_delta=timedelta(hours=1))
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
 
 # Ejecutar con Uvicorn si se ejecuta directamente
 if __name__ == "__main__":
