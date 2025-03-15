@@ -9,7 +9,7 @@ from database import USERS_COLLECTION
 load_dotenv()
 
 import os
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 STAGE = os.environ["STAGE"]
 COFFEE_SHOP = os.environ["COFFEE_SHOP"]
 
@@ -25,7 +25,7 @@ app.include_router(product.router, prefix="/api/products", tags=["Products"])
 #app.include_router(expense.router, prefix="/api/expenses", tags=["Expenses"])
 
 # Servir archivos estáticos (para frontend si lo tienes en "static")
-#app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Ruta de prueba
 @app.get("/")
